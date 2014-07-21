@@ -1238,7 +1238,11 @@ class _ArcGISConnection(object):
         if not referer:
             import socket
             ip = socket.gethostbyname(socket.gethostname())
-            referer = socket.gethostbyaddr(ip)[0]
+            try:
+                referer = socket.gethostbyaddr(ip)[0]
+            except socket.herror:
+                # address may not have a resolved name, use IP in this case.
+                referer = ip
         self._referer = referer
         self._useragent = 'PortalPy/' + __version__
 
